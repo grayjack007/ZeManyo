@@ -1,0 +1,9 @@
+{
+  "name": "manyeyo-quarshie-portfolio",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Manyeyo Quarshie - Lifestyle Photographer",
+  "dependencies": {
+    "@netlify/blobs": "^8.1.0"
+  }
+}
