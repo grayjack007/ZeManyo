@@ -551,7 +551,7 @@ footer::before { content: ""; position: absolute; top: 0; left: 0; right: 0; hei
 
     <div class="admin-section">
       <h3>Security</h3>
-      <p class="admin-hint">The admin password is verified securely by the server. Set or change it in your Netlify site environment variables using the key <code>Password_admin</code>. Do not put the password in this website or in GitHub.</p>
+      <p class="admin-hint">The admin password is verified securely by the server. Manage it in your secure Netlify environment settings. Never put the password in this website or in GitHub.</p>
     </div>
 
     <div class="admin-actions">
@@ -841,12 +841,16 @@ async function openAdmin() {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password })
       });
-      if (!response.ok) throw new Error('Authentication failed');
+      if (!response.ok) {
+        if (response.status === 401) throw new Error('The password was not accepted. Check the saved admin password and try again.');
+        if (response.status === 503) throw new Error('Admin sign-in is not configured correctly. Please contact the site administrator.');
+        throw new Error('Admin sign-in is temporarily unavailable. Please try again later.');
+      }
       adminSessionPassword = password;
       adminAuthenticated = true;
     } catch (error) {
       console.error(error);
-      alert('Admin sign-in failed. Check the password and confirm Password_admin is configured in Netlify.');
+      alert(error.message || 'Admin sign-in failed. Please try again.');
       return;
     }
   }
